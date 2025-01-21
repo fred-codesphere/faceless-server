@@ -1,0 +1,161 @@
+package screens
+
+import (
+	"ht/web/view/components"
+	"ht/web/view/layout"
+)
+
+templ CenterCard(title string, hxPost string) {
+	<div class="w-full min-h-screen flex items-center justify-center">
+		<div class="flex flex-col">
+			@components.Form(components.FormConf{HxPost: hxPost, Class: "w-96 card background_primary mb-4"}) {
+				<h1 class="text-xl font-bold pb-4">
+					{ title }
+				</h1>
+				{ children... }
+			}
+			<p class="text-center text-white text-xs">
+				&copy;2025 Codesphere. All rights reserved.
+			</p>
+		</div>
+	</div>
+}
+
+templ Register() {
+	@layout.Index("Register") {
+		@Sidebar()
+		<div class="grow flex flex-col self-stretch bg-[#F0F5EE] justify-center items-center">
+			@components.Form(components.FormConf{HxPost: "/auth/registerWithEmail", Class: "mb-4 w-96"}) {
+				<h1 class="text-2xl font-bold pb-4">
+					Sign up now
+				</h1>
+				<div class="mb-4">
+					@components.InputText("Email", "Your email", "email", "email@example.com", "email", "")
+				</div>
+				<div class="mb-6">
+					@components.InputPassword("Password", "password", "password")
+				</div>
+				<div>
+					<span class="text-zinc-500 text-sm font-normal font-['Inter'] leading-tight">By clicking continue, you agree to our<br/></span>
+					<span class="text-zinc-500 text-sm font-normal font-['Inter'] underline leading-tight">Terms of Service</span>
+					<span class="text-zinc-500 text-sm font-normal font-['Inter'] leading-tight">and </span>
+					<span class="text-zinc-500 text-sm font-normal font-['Inter'] underline leading-tight">Privacy Policy</span>
+					<span class="text-zinc-500 text-sm font-normal font-['Inter'] leading-tight">.</span>
+				</div>
+				<input
+					class="w-full button_primary text-white font-bold p-2 my-2 rounded-lg cursor-pointer"
+					type="submit"
+					value="Sign up"
+				/>
+				<div class="flex flex-row justify-center">
+					<a class="inline-block align-baseline font-medium text-sm text-[#130D1D] hover:text-[#2f2047] cursor-pointer" href="/login">
+						Already registered?
+					</a>
+				</div>
+			}
+		</div>
+	}
+}
+
+templ VerifyEmail() {
+	@layout.Index("Verify email") {
+		@CenterCard("Verify email", "/auth/verifyEmail") {
+			<div class="mb-6">
+				@components.InputText("Your code", "You received a verification code in an email.", "text", "123456", "verification_code", "")
+				@components.Form(components.FormConf{HxPost: "/auth/requestNewEmailVerificationCode"}) {
+					<button type="submit" class="mt-2 inline-block align-baseline font-medium text-sm text-indigo-700 hover:text-indigo-500">
+						Resend code
+					</button>
+				}
+				<input
+					class="w-full bg-indigo-700 hover:bg-indigo-700 text-white font-bold p-2 my-2 rounded-lg"
+					type="submit"
+					value="Finish registration"
+				/>
+				<div class="flex flex-row justify-center">
+					<a class="inline-block align-baseline font-medium text-sm text-indigo-700 hover:text-indigo-500" href="/login">
+						Back to login
+					</a>
+				</div>
+			</div>
+		}
+	}
+}
+
+templ Login() {
+	@layout.Index("Login") {
+		@Sidebar()
+		<div class="grow flex flex-col self-stretch bg-[#F0F5EE] justify-center items-center">
+			@components.Form(components.FormConf{HxPost: "/auth/loginWithEmail", Class: "mb-4 w-96"}) {
+				<h1 class="text-2xl font-bold pb-4">
+					Login
+				</h1>
+				<div class="mb-4">
+					@components.InputText("Email", "Your email", "email", "email@example.com", "email", "")
+				</div>
+				<div class="mb-6">
+					@components.InputPassword("Password", "password", "password")
+					<a class="mt-2 inline-block align-baseline font-medium text-sm text-[#130D1D] hover:text-[#2f2047] dark:text-indigo-500 hover:dark:text-indigo-400" href="/forgotPassword">
+						Forgot Password?
+					</a>
+				</div>
+				<input
+					class="w-full button_primary text-white font-bold p-2 my-2 rounded-lg cursor-pointer"
+					type="submit"
+					value="Login"
+				/>
+				<div class="flex flex-row justify-center">
+					<div class="text-sm font-medium text-gray-500 dark:text-gray-300">
+						Not registered? <a href="/register" class="text-indigo-700 hover:text-indigo-500 dark:text-indigo-500 hover:dark:text-indigo-400">Create account</a>
+					</div>
+				</div>
+			}
+		</div>
+	}
+}
+
+templ ForgotPassword() {
+	@layout.Index("Forgot password") {
+		@CenterCard("Forgot password", "/auth/requestPasswordReset") {
+			<div class="mb-4">
+				@components.InputText("Your email", "Your account email.", "email", "email@example.com", "email", "")
+			</div>
+			<input
+				class="w-full bg-indigo-700 hover:bg-indigo-700 text-white font-bold p-2 my-2 rounded-lg"
+				type="submit"
+				value="Request password reset"
+			/>
+			<div class="flex flex-row justify-center">
+				<a class="inline-block align-baseline font-medium text-sm text-indigo-700 hover:text-indigo-500" href="/login">
+					Back to login
+				</a>
+			</div>
+		}
+	}
+}
+
+templ ResetPassword() {
+	@layout.Index("Reset passwosrd") {
+		@CenterCard("Reset password", "/auth/resetPassword") {
+			<div class="mb-4">
+				@components.InputText("Password reset code", "You received a reset code in an email.", "text", "123456", "verification_code", "")
+			</div>
+			<div class="mb-4">
+				@components.InputText("New password", "Your new password.", "password", "password", "new_password", "")
+			</div>
+			<div class="mb-6">
+				@components.InputText("Repeat new password", "Your new password.", "password", "password", "new_password_confirmed", "")
+			</div>
+			<input
+				class="w-full bg-indigo-700 hover:bg-indigo-700 text-white font-bold p-2 my-2 rounded-lg"
+				type="submit"
+				value="Reset password"
+			/>
+			<div class="flex flex-row justify-center">
+				<a class="inline-block align-baseline font-medium text-sm text-indigo-700 hover:text-indigo-500" href="/login">
+					Back to login
+				</a>
+			</div>
+		}
+	}
+}
